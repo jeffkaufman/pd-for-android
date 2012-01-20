@@ -194,13 +194,6 @@ public class PdService extends Service {
 		super.onDestroy();
 		release();
 	}
-
-	/**
-	 * @return the current audio session ID, for Gingerbread and later; will throw an exception on older versions
-	 */
-	public int getAudioSessionId() {
-		return PdAudio.getAudioSessionId();
-	}
 	
 	// Hack to support multiple versions of the Android API, based on an idea
 	// from http://android-developers.blogspot.com/2010/07/how-to-have-your-cupcake-and-eat-it-too.html
@@ -208,7 +201,7 @@ public class PdService extends Service {
 		void startForeground(Intent intent, int icon, String title, String description);
 		void stopForeground();
 	}
-
+ 
 	// Another version support hack, this time adapted from
 	// http://tuntis.net/2011/03/06/setforeground-missing-in-android-3-0-services/.
 	// This one works around the disappearance of the setForeground method in Honeycomb.

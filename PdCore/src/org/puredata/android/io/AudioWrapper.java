@@ -152,23 +152,6 @@ public abstract class AudioWrapper {
 		return audioThread != null && audioThread.getState() != Thread.State.TERMINATED;
 	}
 	
-	/**
-	 * @return the audio session ID, for Gingerbread and later; will throw an exception on older versions
-	 */
-	public synchronized int getAudioSessionId() {
-		int version = Properties.version;
-		if (version >= 9) {
-			return AudioSessionHandler.getAudioSessionId(track);  // Lazy class loading trick.
-		} else {
-			throw new UnsupportedOperationException("audio sessions not supported in Android " + version);
-		}
-	}
-	
-	private static class AudioSessionHandler {
-		private static int getAudioSessionId(AudioTrack track) {
-			return track.getAudioSessionId();
-		}
-	}
 
 	// weird little hack; eliminates the nasty click when AudioTrack (dis)engages by playing
 	// a few milliseconds of silence before starting AudioTrack
