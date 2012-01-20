@@ -7,7 +7,7 @@
  * 
  */
 
-package org.puredata.android.fifths;
+package org.puredata.android.melodybox;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -26,7 +26,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-public final class CircleView extends View {
+public final class MelodyView extends View {
 
 	private static enum State { UP, MAJOR, MINOR, SHIFT };
 	private static final String[] notesSharp = { "C", "C\u266f", "D", "D\u266f", "E", "F", "F\u266f", "G", "G\u266f", "A", "A\u266f", "B" };
@@ -36,7 +36,7 @@ public final class CircleView extends View {
 	private static final float R2 = 0.92f;
 	private static final float R1 = (float) Math.sqrt((R0 * R0 + R2 * R2) / 2);  // equal area for major and minor fields
 	
-	private CircleOfFifths owner;
+	private MelodyBox owner;
 	private int top = 0;
 	private float xCenter, yCenter, xNorm, yNorm;
 	private int selectedSegment;
@@ -51,22 +51,22 @@ public final class CircleView extends View {
 	private final Paint labelPaint = new Paint();
 	private final Paint selectedPaint = new Paint();
 
-	public CircleView(Context context) {
+	public MelodyView(Context context) {
 		super(context);
 		init();
 	}
 
-	public CircleView(Context context, AttributeSet attrs) {
+	public MelodyView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init();
 	}
 
-	public CircleView(Context context, AttributeSet attrs, int defStyle) {
+	public MelodyView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		init();
 	}
 
-	public void setOwner(CircleOfFifths owner) {
+	public void setOwner(MelodyBox owner) {
 		this.owner = owner;
 	}
 

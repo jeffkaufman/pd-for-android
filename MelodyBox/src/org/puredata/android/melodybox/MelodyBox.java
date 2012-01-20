@@ -7,7 +7,7 @@
  * 
  */
 
-package org.puredata.android.fifths;
+package org.puredata.android.melodybox;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,9 +29,9 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 
-public class CircleOfFifths extends Activity implements OnClickListener {
+public class MelodyBox extends Activity implements OnClickListener {
 
-	private static final String TAG = "Pd Circle Of Fifths";
+	private static final String TAG = "Pd Melody Box";
 	private static final String TOP = "top";
 	private static final int SAMPLE_RATE = 44100;
 	private RadioGroup options;
@@ -84,10 +84,10 @@ public class CircleOfFifths extends Activity implements OnClickListener {
 	
 	private void initGui() {
 		setContentView(R.layout.main);
-		CircleView circle = (CircleView) findViewById(R.id.circleview);
-		circle.setOwner(this);
+		MelodyView melody = (MelodyView) findViewById(R.id.melodyview);
+		melody.setOwner(this);
 		int top = getPreferences(MODE_PRIVATE).getInt(TOP, 0);
-		circle.setTopSegment(top);
+		melody.setTopSegment(top);
 		options = (RadioGroup) findViewById(R.id.options);
 		findViewById(R.id.domdim).setOnClickListener(this);
 		findViewById(R.id.majmin).setOnClickListener(this);

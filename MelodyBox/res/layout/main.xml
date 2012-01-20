@@ -3,7 +3,7 @@
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent" android:background="@drawable/background" >
 	<TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="" />
-	<org.puredata.android.fifths.CircleView android:id="@+id/circleview" android:layout_width="fill_parent"
+	<org.puredata.android.melodybox.MelodyView android:id="@+id/melodyview" android:layout_width="fill_parent"
 		android:layout_height="fill_parent" />
 	<RadioGroup android:id="@+id/options" android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:orientation="horizontal" android:paddingTop="40px" >
