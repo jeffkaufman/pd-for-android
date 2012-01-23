@@ -34,8 +34,6 @@ public class MelodyBox extends Activity implements OnClickListener {
 	private static final String TAG = "Pd Melody Box";
 	private static final String TOP = "top";
 	private static final int SAMPLE_RATE = 44100;
-	private RadioGroup options;
-	private int option = 0;
 
 	private Toast toast = null;
 	
@@ -88,11 +86,6 @@ public class MelodyBox extends Activity implements OnClickListener {
 		melody.setOwner(this);
 		int top = getPreferences(MODE_PRIVATE).getInt(TOP, 0);
 		melody.setTopSegment(top);
-		options = (RadioGroup) findViewById(R.id.options);
-		findViewById(R.id.domdim).setOnClickListener(this);
-		findViewById(R.id.majmin).setOnClickListener(this);
-		findViewById(R.id.sixth).setOnClickListener(this);
-		findViewById(R.id.susp).setOnClickListener(this);
 	}
 
 	private void initPd() throws IOException {
@@ -106,7 +99,7 @@ public class MelodyBox extends Activity implements OnClickListener {
 		PdAudio.initAudio(SAMPLE_RATE, 0, nOut, 1, true);
 		
 		File dir = getFilesDir();
-		File patchFile = new File(dir, "chords.pd");
+		File patchFile = new File(dir, "test1.pd");
 		IoUtils.extractZipResource(getResources().openRawResource(R.raw.patch), dir, true);
 		PdBase.openPatch(patchFile.getAbsolutePath());
 	}
@@ -117,13 +110,16 @@ public class MelodyBox extends Activity implements OnClickListener {
 		PdBase.release();
 	}
 
-	public void playChord(boolean major, int n) {
-		PdBase.sendList("playchord", option + (major ? 1 : 0), n);
+	public void playNote(int n) {
+		float f = (float)n / (float)24.0;
+		f = (float)0.5 + f/2;
+		
+		PdBase.sendFloat("pitch", f);
+		PdBase.sendFloat("volume", (float)1);
 	}
 	
-	public void endChord() {
-		PdBase.sendBang("endchord");
-		resetOptions();
+	public void endNote() {
+		PdBase.sendFloat("volume", (float)0);
 	}
 
 	public void setTop(int top) {
@@ -133,34 +129,6 @@ public class MelodyBox extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		int newOption;
-		switch (v.getId()) {
-		case R.id.domdim:
-			newOption = 2;
-			break;
-		case R.id.majmin:
-			newOption = 4;
-			break;
-		case R.id.sixth:
-			newOption = 6;
-			break;
-		case R.id.susp:
-			newOption = 8;
-			break;
-		default:
-			newOption = 0;
-			break;
-		}
-		if (option == newOption) {
-			resetOptions();
-		} else {
-			option = newOption;
-		}
-	}
-
-	private void resetOptions() {
-		option = 0;
-		options.clearCheck();
 	}
 	
 	@Override

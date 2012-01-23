@@ -249,51 +249,29 @@ public final class MelodyView extends View {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		float x = (event.getX() - xCenter) * xNorm;
-		float y = (event.getY() - yCenter) * yNorm;
-		float radiusSquared = x * x + y * y;
-		float angle = (float) (Math.atan2(x, -y) * 6 / Math.PI);
-		int segment = (int) (angle + 12.5f) % 12;
-		switch (event.getAction()) {
-		case MotionEvent.ACTION_DOWN:
-			if (radiusSquared >= R0 * R0) {
-				selectedSegment = segment;
-				if (radiusSquared >= R2 * R2) {
-					currentState = State.SHIFT;
-					owner.setTop(top);
-				} else {
-					int note = (top * 7 + segment * 7) % 12;
-					if (radiusSquared >= R1 * R1) {
-						currentState = State.MAJOR;
-						owner.playChord(true, note);
-					} else {
-						currentState = State.MINOR;
-						note = (note + 9) % 12;
-						owner.playChord(false, note);
-					}
-				}
-				invalidate();
-			}
-			break;
+		float x = event.getX()/(2*xCenter);
+		float y = event.getY()/(2*yCenter);
+		
+		int n = 0;
+		switch ((int)(x*7)) {
+		case 0: n = 0; break;
+		case 1: n = 2; break;
+		case 2: n = 4; break;
+		case 3: n = 5; break;
+		case 4: n = 7; break;
+		case 5: n = 9; break;
+		case 6: n = 11; break;
+		}
+		
+		n += (int)(y*3)*12;
+		
+		switch (event.getAction()) {	
 		case MotionEvent.ACTION_MOVE:
-			if (currentState == State.SHIFT && radiusSquared >= R0 * R0) {
-				int step = (selectedSegment - segment + 12) % 12;
-				if (step > 0) {
-					top = (top + step) % 12;
-					invalidate();
-					owner.setTop(top);
-				}
-				selectedSegment = segment;
-			}
+		case MotionEvent.ACTION_DOWN:
+			owner.playNote(n);
 			break;
-		case MotionEvent.ACTION_UP:
 		default:
-			if (currentState == State.MAJOR || currentState == State.MINOR) {
-				owner.endChord();
-			}
-			currentState = State.UP;
-			invalidate();
-			break;
+			owner.endNote();
 		}
 		return true;
 	}
