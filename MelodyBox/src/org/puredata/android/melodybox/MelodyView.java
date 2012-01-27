@@ -136,39 +136,7 @@ public final class MelodyView extends View {
 	protected void onDraw(Canvas canvas) {
 		canvas.translate(xCenter, yCenter);
 		canvas.scale(xCenter, yCenter);
-		canvas.save(Canvas.MATRIX_SAVE_FLAG);
-		canvas.rotate(-top * 30);
-		canvas.drawBitmap(wheel, null, new RectF(-1, -1, 1, 1), null);
-		canvas.restore();
-		int c = (top * 7) % 12;
-		float dy = R0 / 1.8f;
-		float dx = dy * 1.38f;
-		canvas.drawBitmap(keySigs[c], null, new RectF(-dx, -dy, dx, dy), null);
-		int s0 = shifts[c];
-		for (int i = 0; i < 12; i++) {
-			if (i == selectedSegment) {
-				if (currentState == State.MAJOR) {
-					canvas.drawPath(majorField, selectedPaint);
-				}
-				else if (currentState == State.MINOR) {
-					canvas.drawPath(minorField, selectedPaint);
-				}
-				else if (currentState == State.SHIFT) {
-					canvas.drawPath(rimField, selectedPaint);
-				}
-			}
-			int s1 = s0 + i;
-			if (i > 6) s1 -= 12;
-			String label = (s1 >= 0) ? notesSharp[c] : notesFlat[c];
-			drawLabel(canvas, label, (R1 + R2) / 2);
-			c = (c + 9) % 12;
-			label = (s1 >= 0) ? notesSharp[c] : notesFlat[c];
-			drawLabel(canvas, label.toLowerCase(), (R0 + R1) / 2);
-			c = (c + 10) % 12;
-			canvas.rotate(30);
-		}
 		canvas.drawBitmap(grid, null, new RectF(-1, -1, 1, 1), null);
-		canvas.drawBitmap(shadow, null, new RectF(-1, -1, 1, 1), null);
 	}
 
 	private void drawLabel(Canvas canvas, String label, float r) {
@@ -192,59 +160,27 @@ public final class MelodyView extends View {
 	}
 
 	private void drawBitmaps(int w, int h) {
-		if (wheel != null) {
-			wheel.recycle();
-			shadow.recycle();
+		if (grid != null) {
 			grid.recycle();
 		}
-		wheel = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-		shadow = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 		grid  = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas();
 		canvas.translate(xCenter, yCenter);
 		canvas.scale(xCenter, yCenter);
-		
-		Paint shades[] = new Paint[4];
-		for (int i = 0; i < 4; i++) {
-			int c = 0x98 + 0x10 * i;
-			shades[i] = new Paint();
-			shades[i].setStyle(Paint.Style.FILL);
-			shades[i].setColor(Color.argb(0xff, c, c, c));
-		}
-		Paint centerShade = new Paint(shades[0]);
-		centerShade.setColor(Color.argb(0xff, 0x78, 0x78, 0x78));
-		Paint shadowPaint = new Paint();
-		shadowPaint.setShader(new LinearGradient(0, -1, 0, 1, 
-				new int[] { 0x00ffffff, 0x77000000 }, null, TileMode.CLAMP));
 		Paint gridPaint = new Paint();
 		gridPaint.setAntiAlias(true);
 		gridPaint.setStrokeWidth(0.016f);
 		gridPaint.setStyle(Paint.Style.STROKE);
 		gridPaint.setColor(Color.DKGRAY);
 		
-		canvas.setBitmap(shadow);
-		canvas.drawCircle(0, 0, 1, shadowPaint);
-		
-		canvas.setBitmap(wheel);
-		canvas.drawCircle(0, 0, R0, centerShade);
-		for (int i = 0; i < 12; i++) {
-			Paint shade = shades[i % 4];
-			canvas.drawPath(minorField, shade);
-			canvas.drawPath(majorField, shade);
-			canvas.drawPath(rimField, shade);
-			canvas.rotate(30);
-		}
-		
 		canvas.setBitmap(grid);
-		canvas.drawCircle(0, 0, R0, gridPaint);
-		canvas.drawCircle(0, 0, R1, gridPaint);
-		canvas.drawCircle(0, 0, R2, gridPaint);
-		canvas.drawCircle(0, 0, 1, gridPaint);
-		canvas.rotate(15);
-		for (int i = 0; i < 12; i++) {
-			canvas.drawLine(0, R0, 0, 1, gridPaint);
-			canvas.rotate(30);
+		for (int i = 0; i < 7; i++) {
+			canvas.drawLine((float)i/7*2-1, -1, (float)i/7*2-1, 1, gridPaint);
 		}
+		for (int i = 0; i < 3; i++) {
+			canvas.drawLine(-1, (float)i/3*2-1, 1, (float)i/3*2-1, gridPaint);
+		}
+
 	}
 
 	@Override
